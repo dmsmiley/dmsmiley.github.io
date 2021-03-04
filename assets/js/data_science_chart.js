@@ -23,6 +23,6 @@ anychart.onDocumentReady(function() {
   chart.title("The deadliest earthquakes in the XXth century");
 
   // draw
-  chart.container("container");
+  chart.container("chartContainer");
   chart.draw();
 });
