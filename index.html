@@ -113,7 +113,7 @@
 
 							xScale.domain(data.map(function(d) { return d.skill; }));
 							yScale.domain([0, d3.max(data, function(d) { return d.level; })]);
-
+							<!-- Labels 
 							g.append("g")
 							 .attr("transform", "translate(0," + height + ")")
 							 .call(d3.axisBottom(xScale))
@@ -135,7 +135,7 @@
 							 .attr("dy", "-5.1em")
 							 .attr("text-anchor", "end")
 							 .attr("stroke", "black")
-							 .text("Level");
+							 .text("Level"); -->
 
 							g.selectAll(".bar")
 							 .data(data)
