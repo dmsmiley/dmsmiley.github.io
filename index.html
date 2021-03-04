@@ -169,8 +169,8 @@
 						    .enter()
 						    .append("rect") // Add a new rect for each new elements
 							.on("mouseover", function(){
-                       						d3.select(this).style('fill', '#c6e5dd');})
-      							.on("mouseout", function(){d3.select(this).style('fill','#69b3a2')})
+                       						d3.select(this).style('fill', '#948c84');})
+      							.on("mouseout", function(){d3.select(this).style('fill','#7c736b')})
 						    .merge(u) // get the already existing elements as well
 						    .transition() // and apply changes to all of them
 						    .duration(1000)
@@ -178,7 +178,7 @@
 						      .attr("y", function(d) { return y(d.value); })
 						      .attr("width", x.bandwidth())
 						      .attr("height", function(d) { return height - y(d.value); })
-						      .attr("fill", "#69b3a2")
+						      .attr("fill", "#7c736b")
 
 						  // If less group in the new dataset, I delete the ones not in use anymore
 						  u
