@@ -11,13 +11,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
-	<style>
-	rect.bar-rect { fill: #189ad3; }
-	rect.bar-rect:hover { 
-      	fill: #107dac;
-      	transition: all .2s;
-    	}
- 	</style>
 	<body class="is-preload">
 
 		<!-- Header -->
@@ -85,60 +78,67 @@
 					</section>
 				<!-- Visualizations -->
 					<section id="visualizations">
-						<div class=”canvas”></div>
-  						<script src=”https://d3js.org/d3.v6.js"></script>
+						<svg width="600" height="500"</svg>
 						<script>
-						const width = 1000;
-						const height = 600;
-						const margin = {‘top’: 20, ‘right’: 20, ‘bottom’: 100, ‘left’: 100};
-						const graphWidth = width — margin.left — margin.right;
-						const graphHeight = height — margin.top — margin.bottom;
-										       
-						const svg = d3.select(‘.canvas’)
-						  .append(‘svg’)
-						  .attr(‘width’, width)
-						  .attr(‘height’, height);
-						const graph = svg.append(‘g’)
-						  .attr(‘width’, graphWidth)
-						  .attr(‘height’, graphHeight)
-						  .attr(‘transform’, `translate(${margin.left}, ${margin.top})`);
-						const gXAxis = graph.append(‘g’)
-						  .attr(‘transform’, `translate(0, ${graphHeight})`);
-						const gYAxis = graph.append('g')
-						d3.json(‘assets/data_digital.json’).then(data => {
-						  const y = d3.scaleLinear()
-						    .domain([0, d3.max(data, d => d.Level)])
-						    .range([graphHeight, 0]);
-						  const x = d3.scaleBand()
-						    .domain(data.map(item => item.Skill))
-						    .range([0, 500])
-						    .paddingInner(0.2)
-						    .paddingOuter(0.2);
-						  const rects = graph.selectAll(‘rect’)
-						    .data(data);
-						  rects.attr(‘width’, x.bandwidth)
-						    .attr(‘class’, ‘bar-rect’)
-						    .attr(‘height’, d => graphHeight — y(d.Level))
-						    .attr(‘x’, d => x(d.Skill))
-						    .attr(‘y’, d => y(d.Level));
-						  rects.enter()
-						    .append(‘rect’)
-						    .attr(‘class’, ‘bar-rect’)
-						    .attr(‘width’, x.bandwidth)
-						    .attr(‘height’, d => graphHeight — y(d.Level))
-						    .attr(‘x’, d => x(d.Skill))
-						    .attr(‘y’, d => y(d.Level));
-						  const xAxis = d3.axisBottom(x);
-						  const yAxis = d3.axisLeft(y)
-						    .ticks(10);
-						  gXAxis.call(xAxis);
-						  gYAxis.call(yAxis);
-						  gXAxis.selectAll(‘text’)
-						    .style(‘font-size’, 14);
 
-						  gYAxis.selectAll(‘text’)
-						    .style(‘font-size’, 14);
-						});
+						    var svg = d3.select("svg"),
+							margin = 200,
+							width = svg.attr("width") - margin,
+							height = svg.attr("height") - margin
+
+						    svg.append("text")
+						       .attr("transform", "translate(100,0)")
+						       .attr("x", 50)
+						       .attr("y", 50)
+						       .attr("font-size", "24px")
+						       .text("XYZ Foods Stock Price")
+
+						    var xScale = d3.scaleBand().range([0, width]).padding(0.4),
+							yScale = d3.scaleLinear().range([height, 0]);
+
+						    var g = svg.append("g")
+							       .attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+						    d3.csv("assets/data_digital.csv", function(error, data) {
+							if (error) {
+							    throw error;
+							}
+
+							xScale.domain(data.map(function(d) { return d.skill; }));
+							yScale.domain([0, d3.max(data, function(d) { return d.level; })]);
+
+							g.append("g")
+							 .attr("transform", "translate(0," + height + ")")
+							 .call(d3.axisBottom(xScale))
+							 .append("text")
+							 .attr("y", height - 250)
+							 .attr("x", width - 100)
+							 .attr("text-anchor", "end")
+							 .attr("stroke", "black")
+							 .text("Skill");
+
+							g.append("g")
+							 .call(d3.axisLeft(yScale).tickFormat(function(d){
+							     return "$" + d;
+							 })
+							 .ticks(10))
+							 .append("text")
+							 .attr("transform", "rotate(-90)")
+							 .attr("y", 6)
+							 .attr("dy", "-5.1em")
+							 .attr("text-anchor", "end")
+							 .attr("stroke", "black")
+							 .text("Stock Price");
+
+							g.selectAll(".bar")
+							 .data(data)
+							 .enter().append("rect")
+							 .attr("class", "bar")
+							 .attr("x", function(d) { return xScale(d.skill); })
+							 .attr("y", function(d) { return yScale(d.level); })
+							 .attr("width", xScale.bandwidth())
+							 .attr("height", function(d) { return height - yScale(d.level); });
+						    });
 						</script>
 					</section>
 				<!-- Three -->
