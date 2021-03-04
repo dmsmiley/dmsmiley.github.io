@@ -110,7 +110,7 @@
 						];
 
 						// set the dimensions and margins of the graph
-						var margin = {top: 30, right: 30, bottom: 70, left: 60},
+						var margin = {top: 30, right: 30, bottom: 70, left: 0},
 						    width = 800 - margin.left - margin.right,
 						    height = 500 - margin.top - margin.bottom;
 
@@ -155,6 +155,9 @@
 						  u
 						    .enter()
 						    .append("rect") // Add a new rect for each new elements
+							.on("mouseover", function(){
+                       						d3.select(this).style('fill', '#c6e5dd');})
+      							.on("mouseout", function(){d3.select(this).style('fill','#69b3a2')})
 						    .merge(u) // get the already existing elements as well
 						    .transition() // and apply changes to all of them
 						    .duration(1000)
