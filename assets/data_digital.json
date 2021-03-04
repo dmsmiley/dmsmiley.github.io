@@ -2,10 +2,10 @@
   {"Skill": "Python", "Level": 7},
   {"Skill": "R", "Level": 4},
   {"Skill": "SQL", "Level": 4},
-  {"Skill": "Pandas", “Level”: 7},
-  {"Skill": "SciKit-Learn", “Level”: 6},
-  {"Skill": "Numpy", “Level”: 7},
-  {"Skill": "Matplotlib", “Level”: 5},
-  {"Skill": "Seaborn", “Level”: 5},
-  {"Skill": "Statistics", “Level”: 4}
+  {"Skill": "Pandas", "Level": 7},
+  {"Skill": "SciKit-Learn", "Level": 6},
+  {"Skill": "Numpy", "Level": 7},
+  {"Skill": "Matplotlib", "Level": 5},
+  {"Skill": "Seaborn", "Level": 5},
+  {"Skill": "Statistics", "Level": 4}
 ]
