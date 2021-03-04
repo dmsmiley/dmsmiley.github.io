@@ -86,133 +86,99 @@
 				<!-- Data Visualization -->
 					<section id="visualizations_1">
 						<h2>SKILL LEVELS</h2>
-						<svg width="700" height="500"</svg>
+						<button onclick="update(data_viz)">Data Skills</button>
+            					<button onclick="update(human_viz)">Humanities Skills</button>
+            					<div id="my_dataviz"></div>
 						<script>
 
-						    var svg = d3.select("svg"),
-							margin = 200,
-							width = svg.attr("width") - margin,
-							height = svg.attr("height") - margin
+						// create 2 data_set
+						var data1 = [
+						   {group: "Python", value: 7},
+						   {group: "R", value: 4},
+						   {group: "SQL", value: 4},
+						   {group: "Pandas", value: 7},
+						   {group: "Scikit", value: 6},
+						   {group: "Numpy", value: 7},
+						   {group: "Matplotlib", value: 5},
+						   {group: "Seaborn", value: 5},
+						   {group: "Statistics", value: 4},
+						];
 
-						    svg.append("text")
-						       .attr("transform", "translate(100,0)")
-						       .attr("x", 205)
-						       .attr("y", 50)
-						       .attr("font-size", "20px")
-						       .text("Digital Skills")
+						var data2 = [
+						   {group: "Research", value: 9},
+						   {group: "Writing", value: 8},
+						   {group: "Problem Solving", value: 8},
+						   {group: "Project Management", value: 10},
+						   {group: "Linguistics", value: 9},
+						   {group: "Leadership", value: 8},
+						   {group: "Teaching", value: 9},
+						   {group: "Teamwork", value: 8},
+						];
 
-						    var xScale = d3.scaleBand().range([0, width]).padding(0.4),
-							yScale = d3.scaleLinear().range([height, 0]);
+						// set the dimensions and margins of the graph
+						var margin = {top: 30, right: 30, bottom: 70, left: 60},
+						    width = 460 - margin.left - margin.right,
+						    height = 400 - margin.top - margin.bottom;
 
-						    var g = svg.append("g")
-							       .attr("transform", "translate(" + 100 + "," + 100 + ")");
+						// append the svg object to the body of the page
+						var svg = d3.select("#my_dataviz")
+						  .append("svg")
+						    .attr("width", width + margin.left + margin.right)
+						    .attr("height", height + margin.top + margin.bottom)
+						  .append("g")
+						    .attr("transform",
+							  "translate(" + margin.left + "," + margin.top + ")");
 
-						    d3.csv("assets/data_digital.csv", function(error, data) {
-							if (error) {
-							    throw error;
-							}
+						// Initialize the X axis
+						var x = d3.scaleBand()
+						  .range([ 0, width ])
+						  .padding(0.2);
+						var xAxis = svg.append("g")
+						  .attr("transform", "translate(0," + height + ")")
 
-							xScale.domain(data.map(function(d) { return d.skill; }));
-							yScale.domain([0, d3.max(data, function(d) { return d.level; })]);
-							
-							g.append("g")
-							 .attr("transform", "translate(0," + height + ")")
-							 .call(d3.axisBottom(xScale))
-							 .append("text")
-							 .attr("y", height - 250)
-							 .attr("x", width - 100)
-							 .attr("text-anchor", "end")
-							 .attr("stroke", "black")
-							 <!--.text("Skill"); -->
+						// Initialize the Y axis
+						var y = d3.scaleLinear()
+						  .range([ height, 0]);
+						var yAxis = svg.append("g")
+						  .attr("class", "myYaxis")
 
-							g.append("g")
-							 .call(d3.axisLeft(yScale).tickFormat(function(d){
-							     return d;
-							 })
-							 .ticks(10))
-							 .append("text")
-							 .attr("transform", "rotate(-90)")
-							 .attr("y", 6)
-							 .attr("dy", "-5.1em")
-							 .attr("text-anchor", "end")
-							 .attr("stroke", "black")
-							 <!--.text("Level"); -->
 
-							g.selectAll(".bar")
-							 .data(data)
-							 .enter().append("rect")
-							 .attr("class", "bar")
-							 .attr("x", function(d) { return xScale(d.skill); })
-							 .attr("y", function(d) { return yScale(d.level); })
-							 .attr("width", xScale.bandwidth())
-							 .attr("height", function(d) { return height - yScale(d.level); });
-						    });
-						</script>
-					</section>
-				<!-- Humanities Visualization -->
-					<section id="visualizations_2">
-						<h2> </h2>
-						<svg width="700" height="600"</svg>
-						<script>
+						// A function that create / update the plot for a given variable:
+						function update(data) {
 
-						    var svg = d3.select("svg"),
-							margin = 200,
-							width = svg.attr("width") - margin,
-							height = svg.attr("height") - margin
+						  // Update the X axis
+						  x.domain(data.map(function(d) { return d.group; }))
+						  xAxis.call(d3.axisBottom(x))
 
-						    svg.append("text")
-						       .attr("transform", "translate(100,0)")
-						       .attr("x", 205)
-						       .attr("y", 50)
-						       .attr("font-size", "20px")
-						       .text("Humanities Skills")
+						  // Update the Y axis
+						  y.domain([0, d3.max(data, function(d) { return d.value }) ]);
+						  yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
-						    var xScale = d3.scaleBand().range([0, width]).padding(0.4),
-							yScale = d3.scaleLinear().range([height, 0]);
+						  // Create the u variable
+						  var u = svg.selectAll("rect")
+						    .data(data)
 
-						    var g = svg.append("g")
-							       .attr("transform", "translate(" + 100 + "," + 100 + ")");
+						  u
+						    .enter()
+						    .append("rect") // Add a new rect for each new elements
+						    .merge(u) // get the already existing elements as well
+						    .transition() // and apply changes to all of them
+						    .duration(1000)
+						      .attr("x", function(d) { return x(d.group); })
+						      .attr("y", function(d) { return y(d.value); })
+						      .attr("width", x.bandwidth())
+						      .attr("height", function(d) { return height - y(d.value); })
+						      .attr("fill", "#69b3a2")
 
-						    d3.csv("assets/data_humanities.csv", function(error, data) {
-							if (error) {
-							    throw error;
-							}
+						  // If less group in the new dataset, I delete the ones not in use anymore
+						  u
+						    .exit()
+						    .remove()
+						}
 
-							xScale.domain(data.map(function(d) { return d.skill; }));
-							yScale.domain([0, d3.max(data, function(d) { return d.level; })]);
-							
-							g.append("g")
-							 .attr("transform", "translate(0," + height + ")")
-							 .call(d3.axisBottom(xScale))
-							 .append("text")
-							 .attr("y", height - 250)
-							 .attr("x", width - 100)
-							 .attr("text-anchor", "end")
-							 .attr("stroke", "black")
-							 <!--.text("Skill"); -->
+						// Initialize the plot with the first dataset
+						update(data1)
 
-							g.append("g")
-							 .call(d3.axisLeft(yScale).tickFormat(function(d){
-							     return d;
-							 })
-							 .ticks(10))
-							 .append("text")
-							 .attr("transform", "rotate(-90)")
-							 .attr("y", 6)
-							 .attr("dy", "-5.1em")
-							 .attr("text-anchor", "end")
-							 .attr("stroke", "black")
-							 <!--.text("Level"); -->
-
-							g.selectAll(".bar")
-							 .data(data)
-							 .enter().append("rect")
-							 .attr("class", "bar")
-							 .attr("x", function(d) { return xScale(d.skill); })
-							 .attr("y", function(d) { return yScale(d.level); })
-							 .attr("width", xScale.bandwidth())
-							 .attr("height", function(d) { return height - yScale(d.level); });
-						    });
 						</script>
 					</section>
 				<!-- Three -->
